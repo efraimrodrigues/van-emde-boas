@@ -3,7 +3,7 @@ from veb import veb
 import random
 
 
-v = veb(4)
+v = veb(64)
 
 v.add(0)
 v.add(1)
@@ -37,12 +37,13 @@ table = veb(32)
 
 n = 200
 
-prev = None
+prev = 0
 for i in range(n):
-    
-    table.add(i)
+    number = random.randint(prev + 1, prev + 10)
 
-    if table.predecessor(i) != prev:
+    table.add(number)
+
+    if table.predecessor(number) != prev:
         print("Error")
 
-    prev = i
+    prev = number
