@@ -4,7 +4,6 @@ from hash_table import hash_table
 class veb:
 
     def __init__(self, w):
-        self.__n = 1
         self.w = w
 
         self.min = None
@@ -51,14 +50,48 @@ class veb:
                 
                 v.add(i)
 
-                self.__n = self.__n + 1
+    def delete(self, x):
+        if x > self.max or x < self.min:
+            return
+
+        c = self.c(x)
+        i = self.i(x)
+        v = self.clusters.search(c)
+
+        if x == self.min:
+            if self.summary != None:
+                c = self.summary.min
+            else:
+                c = None
+
+            if c == None:
+                self.min = None
+                return
+
+            v = self.clusters.search(c)
+            self.min = self.compose(c, v.min)
+            x = self.min
+            return 
+
+        if v != None:
+            v.delete(i)
+
+        if v != None and v.min == None:
+            self.summary.delete(c)
+
+        if self.summary != None and self.summary.min == None:
+            self.max = self.min
+        elif self.summary != None and self.summary.min != None:
+            c = self.summary.max
+            v = self.clusters.search(c)
+            self.max = self.compose(c, v.max)
 
     def successor(self, x):
+        if x == None or x >= self.max:
+            return None
+
         if x < self.min:
             return self.min
-
-        if x >= self.max:
-            return None
 
         c = self.c(x)
         i = self.i(x)
@@ -66,7 +99,8 @@ class veb:
 
         if v != None and i < v.max:
             return self.compose(c, v.successor(i))
-
+        
+        #If x isn't in the cluster c, then we inspect the next cluster using summary
         if self.summary != None:
             c = self.summary.successor(c)
             v = self.clusters.search(c)
@@ -89,7 +123,7 @@ class veb:
         if v != None and i > v.min:
             return self.compose(c, v.predecessor(i))
 
-        if i > self.min and v != None and i <= v.max:
+        if i > self.min and v != None and i < v.max:
             return self.compose(c, self.min)
 
         #Summary is only used when we want to change clusters
