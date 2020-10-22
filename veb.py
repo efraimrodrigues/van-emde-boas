@@ -57,22 +57,58 @@ class veb:
         c = self.c(x)
         i = self.i(x)
         v = self.clusters.search(c)
-        if i < v.max:
+
+        if v != None and i < v.max:
             return self.compose(c, v.successor(i))
 
-        c = self.summary.successor(c)
-        return self.compose(c, v.min)
+        if self.summary != None:
+            c = self.summary.successor(c)
+            v = self.clusters.search(c)
+            return self.compose(c, v.min)
+        else:
+            return 1
+
+    def predecessor(self, x):
+        if x > self.max:
+            return self.max
+
+        c = self.c(x)
+        i = self.i(x)
+        v = self.clusters.search(c)
+
+        if v != None and i > v.min:
+            return self.compose(c, v.predecessor(i))
+
+        if self.summary != None:
+            c = self.summary.predecessor(c)
+            v = self.clusters.search(c)
+            return self.compose(c, v.max)
+        else:
+            return 0
 
 v = veb(4)
 
 v.add(1)
 v.add(2)
-v.add(5)
 
-v.successor(2)
+v.add(5)
 
 v.add(8)
 v.add(9)
 v.add(10)
 v.add(11)
 
+v.predecessor(10)
+
+v.successor(2)
+v.predecessor(2)
+
+v.successor(5)
+v.predecessor(8)
+
+v.successor(8)
+
+v.successor(10)
+
+
+print(v)

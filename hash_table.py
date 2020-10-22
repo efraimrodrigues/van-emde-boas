@@ -28,7 +28,7 @@ class hash_table:
             self.__lookup.append(random.sample(range(table_size), table_size))
 
     def __bin(self, key):
-        b = [int(i) for i in list('{0:0b}'.format(key))]
+        b = [int(i) for i in list('{0:0b}'.format(int(key)))]
 
         if len(b) < self.__q:
             b = [0] * (self.__q - len(b)) + b
@@ -146,6 +146,9 @@ class hash_table:
         return [h, t, cleaning, halving, m]
 
     def search(self, key):
+        if key == None:
+            return None
+
         h = self.__hash(key)
         m = len(self.table)
 
