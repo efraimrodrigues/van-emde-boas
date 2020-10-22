@@ -4,6 +4,7 @@ from hash_table import hash_table
 class veb:
 
     def __init__(self, w):
+        self.__n = 1
         self.w = w
 
         self.min = None
@@ -50,9 +51,14 @@ class veb:
                 
                 v.add(i)
 
+                self.__n = self.__n + 1
+
     def successor(self, x):
         if x < self.min:
             return self.min
+
+        if x >= self.max:
+            return None
 
         c = self.c(x)
         i = self.i(x)
@@ -76,39 +82,21 @@ class veb:
         i = self.i(x)
         v = self.clusters.search(c)
 
+        #If the predecessor is in cluster c
         if v != None and i > v.min:
             return self.compose(c, v.predecessor(i))
 
+        if i > self.min and v != None and i <= v.max:
+            return self.compose(c, self.min)
+
+        #Summary is only used when we want to change clusters
         if self.summary != None:
             c = self.summary.predecessor(c)
             v = self.clusters.search(c)
-            return self.compose(c, v.max)
+
+            if v != None:
+                return self.compose(c, v.max)
+            else:
+                return self.min
         else:
             return 0
-
-v = veb(4)
-
-v.add(1)
-v.add(2)
-
-v.add(5)
-
-v.add(8)
-v.add(9)
-v.add(10)
-v.add(11)
-
-v.predecessor(10)
-
-v.successor(2)
-v.predecessor(2)
-
-v.successor(5)
-v.predecessor(8)
-
-v.successor(8)
-
-v.successor(10)
-
-
-print(v)

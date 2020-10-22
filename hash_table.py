@@ -83,6 +83,9 @@ class hash_table:
 
         return t
 
+    def get_n(self):
+        return self.__n
+
     def add(self, entry):
         self.__n = self.__n + 1
 
