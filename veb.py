@@ -78,6 +78,9 @@ class veb:
         if x > self.max:
             return self.max
 
+        if x <= self.min:
+            return None
+
         c = self.c(x)
         i = self.i(x)
         v = self.clusters.search(c)
