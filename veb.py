@@ -97,7 +97,7 @@ class veb:
                 self.min = 0
         
         if self.summary != None:
-            #If the summary doesn't 
+            #If the summary isn't necessary anymore
             if self.summary.min == None:
                 self.max = self.min
                 self.summary = None
