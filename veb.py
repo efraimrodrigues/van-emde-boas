@@ -1,15 +1,17 @@
 from pair import pair
 from hash_table import hash_table
+import numpy as np
 
 class veb:
 
-    def __init__(self, w):
+    def __init__(self, w, lookup = None):
         self.w = w
 
         self.min = None
         self.max = None
 
-        self.clusters = hash_table()
+        self.clusters = hash_table(lookup = lookup)
+        self.__lookup = self.clusters.get_lookup()
         self.summary = None
 
     def c(self, x):
@@ -41,11 +43,11 @@ class veb:
                 v = self.clusters.search(c)
                 if v == None or v.min == None:
                     if self.summary == None:
-                        self.summary = veb(self.w/2)
+                        self.summary = veb(self.w/2, lookup=self.__lookup)
                     self.summary.add(c)
 
                 if v == None:
-                    v = veb(self.w/2)
+                    v = veb(self.w/2, lookup=self.__lookup)
                     self.clusters.add(pair(c, v))
                 
                 v.add(i)
@@ -59,32 +61,50 @@ class veb:
         v = self.clusters.search(c)
 
         if x == self.min:
+            cluster = None
             if self.summary != None:
-                c = self.summary.min
-            else:
-                c = None
+                cluster = self.summary.min
 
-            if c == None:
+            if cluster == None:
                 self.min = None
-                return
-
-            v = self.clusters.search(c)
-            self.min = self.compose(c, v.min)
-            x = self.min
-            return 
+            else:
+                #c = cluster
+                i = self.clusters.search(cluster).min
+                minimum = self.compose(cluster, i)
+                if minimum != x or minimum < self.min:
+                    self.min = minimum
+                    x = self.min
+                else:
+                    self.min = None
 
         if v != None:
             v.delete(i)
 
-        if v != None and v.min == None:
-            self.summary.delete(c)
+            if v.min == None and v.max != None:
+                v.min = v.max
+            
+            if v.min == None and self.summary != None:
+                self.summary.delete(c)
+                if v.max is None or v.max == x:
+                    self.clusters.delete(c)            
 
-        if self.summary != None and self.summary.min == None:
+        elif x == self.max:
             self.max = self.min
-        elif self.summary != None and self.summary.min != None:
-            c = self.summary.max
-            v = self.clusters.search(c)
-            self.max = self.compose(c, v.max)
+        elif self.w == 1:
+            if x == 0 and self.max == 1:
+                self.min = 1
+            elif x == 0 and self.max == 0:
+                self.min = 0
+        
+        if self.summary != None:
+            #If the summary doesn't 
+            if self.summary.min == None:
+                self.max = self.min
+                self.summary = None
+            else:
+                c = self.summary.max
+                v = self.clusters.search(c)
+                self.max = self.compose(c, v.max)
 
     def successor(self, x):
         if x == None or x >= self.max:

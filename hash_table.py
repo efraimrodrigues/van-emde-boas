@@ -11,7 +11,7 @@ from pair import pair
 
 class hash_table:
 
-    def __init__(self, block_size = 8, e = 1, cleaning_threshold = 0.25):
+    def __init__(self, block_size = 8, e = 0.5, cleaning_threshold = 0.15, lookup = None):
         self.__q = 64 #Key size
         self.__block_size = block_size #Size of blocks the key will be split into
         self.__e = e #Doubling and halving constant parameter
@@ -24,8 +24,23 @@ class hash_table:
         self.debug = False #Debugging control
 
         table_size = 2**self.__block_size
-        for i in range(0, self.__block_size):
-            self.__lookup.append(random.sample(range(table_size), table_size))
+        if lookup is None:
+            universe = 2**64
+            for i in range(0, self.__block_size):
+                lookup_table = []
+                for i in range(table_size):
+                    lookup_table.append(random.randint(0, universe))
+
+                self.__lookup.append(lookup_table)
+        else:
+            if len(lookup) != self.__block_size:
+                raise Exception("Invalid lookup table.")
+            
+            for i in range(len(lookup)):
+                if len(lookup[i]) != table_size:
+                    raise Exception("[" + str(i) + "]" + " Invalid lookup table.")
+
+            self.__lookup = lookup
 
     def __bin(self, key):
         b = [int(i) for i in list('{0:0b}'.format(int(key)))]
@@ -86,6 +101,9 @@ class hash_table:
     def get_n(self):
         return self.__n
 
+    def get_lookup(self):
+        return self.__lookup
+
     def add(self, entry):
         self.__n = self.__n + 1
 
@@ -124,11 +142,11 @@ class hash_table:
         i = 1
 
         #Linear probing
-        while self.table[t] != None and self.table[t].get_key() != key and math.isnan(self.table[t]):
+        while self.table[t] != None and (self.table[t].get_key() != key or math.isnan(self.table[t].get_key())):
             t = (h + i) % m
             i = i + 1
 
-        if self.table[t].get_key() == key:
+        if self.table[t] != None and self.table[t].get_key() == key:
             self.table[t] = pair(float("NaN"),float("NaN"))
             self.__r = self.__r + 1
         else:
@@ -139,6 +157,7 @@ class hash_table:
         #Checks if it needs halving
         if self.__n < m/4:
             self.__halving()
+            m = len(self.table)
             halving = True
 
         #Checks if it needs cleaning
@@ -169,3 +188,38 @@ class hash_table:
             return self.table[t].get_value()
         else:
             return None
+
+"""output = open('output.txt', 'w')
+
+table = hash_table()
+
+output.write(str(len(table.table)) + "\n\n")
+
+with open(sys.argv[1]) as fp:
+    for line in fp.readlines():
+        command = line.strip().split(':')
+        operation, value = command
+        if operation == 'INC':
+            h, t, doubling, m = table.add(pair(int(value), int(value)))
+            output.write(operation + ":" + value + "\n\n")
+            output.write(str(h) + " " + str(t) + "\n\n")
+
+            if doubling:
+                output.write("DOBRAR TAM:" + str(m) + "\n\n")
+        elif operation == 'REM':
+            h, t, cleaning, halving, m = table.delete(int(value))
+
+            output.write(operation + ":" + value + "\n\n")
+            output.write(str(h) + " " + str(t) + "\n\n")
+
+            if halving:
+                output.write("METADE TAM:" + str(m) + "\n\n")
+
+            if cleaning:
+                output.write("LIMPAR\n")
+        elif operation == 'BUS':
+            h, t = table.search(int(value))
+
+            output.write(operation + ":" + value + "\n\n")
+            output.write(str(h) + " " + str(t) + "\n\n")
+"""
