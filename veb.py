@@ -68,7 +68,7 @@ class veb:
             if cluster == None:
                 self.min = None
             else:
-                #c = cluster
+                c = cluster
                 i = self.clusters.search(cluster).min
                 minimum = self.compose(cluster, i)
                 if minimum != x or minimum < self.min:
@@ -80,10 +80,10 @@ class veb:
         if v != None:
             v.delete(i)
 
+            #If we deleted the min but the max is still there. We don't want to erase max and loose its value.
             if v.min == None and v.max != None:
                 v.min = v.max
-            
-            if v.min == None and self.summary != None:
+            elif v.min == None and self.summary != None:
                 self.summary.delete(c)
                 if v.max is None or v.max == x:
                     self.clusters.delete(c)            

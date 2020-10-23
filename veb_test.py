@@ -69,9 +69,9 @@ if v.successor(24) != 49:
     raise Exception("Successor error.")
 
 v.add(65)
-v.delete(65)
 v.add(71)
 v.delete(71)
+v.delete(65)
 v.add(75)
 v.delete(75)
 v.add(78)
@@ -97,7 +97,7 @@ v.delete(17)
 v.successor(10)
 
 #Test successor and predecessor methods
-"""
+
 table = veb(64)
 n = 200
 prev = 0
@@ -114,7 +114,7 @@ for i in range(n):
         print("Predecessor error: " + str(predecessor))
     
     prev = number
-"""
+
 print("Testing removals.")
 #Let's test rmovals
 table = veb(64)
