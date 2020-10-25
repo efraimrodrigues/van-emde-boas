@@ -1,6 +1,7 @@
 from pair import pair
 from hash_table import hash_table
 import numpy as np
+import sys
 
 class veb:
 
@@ -157,3 +158,26 @@ class veb:
                 return self.min
         else:
             return 0
+
+output = open('output.txt', 'w')
+
+table = veb(64)
+
+with open(sys.argv[1]) as fp:
+    for line in fp.readlines():
+        command = line.strip().split(':')
+        operation, value = command
+        if operation == 'INC':
+            table.add(int(value))
+            output.write(operation + ":" + value + "\n\n")
+        elif operation == 'REM':
+            table.delete(int(value))
+            output.write(operation + ":" + value + "\n\n")
+        elif operation == 'PRE':
+            pre = table.predecessor(int(value))
+            output.write(operation + ":" + value + "\n")
+            output.write(str(pre) + "\n\n")
+        elif operation == 'SUC':
+            suc = table.successor(int(value))
+            output.write(operation + ":" + value + "\n")
+            output.write(str(suc) + "\n\n")
