@@ -184,6 +184,10 @@ class hash_table:
             if self.table[t] != None:
                 i = i + 1
 
+            #If the whole table has been scanned and the value wasn't found, return None
+            if i >= len(self.table):
+                return None
+
         if self.table[t] != None and self.table[t].get_key() == key:
             return self.table[t].get_value()
         else:
