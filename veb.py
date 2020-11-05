@@ -32,7 +32,7 @@ class veb:
             if x < self.min:
                 aux = self.min
                 self.min = x
-                x = self.min
+                x = aux
             
             if x > self.max:
                 self.max = x
@@ -96,6 +96,7 @@ class veb:
                 self.min = 1
             elif x == 0 and self.max == 0:
                 self.min = 0
+            self.max = self.min
         
         if self.summary != None:
             #If the summary isn't necessary anymore
@@ -144,7 +145,7 @@ class veb:
         if v != None and i > v.min:
             return self.compose(c, v.predecessor(i))
 
-        if i > self.min and v != None and i < v.max:
+        if i > self.min and v != None and i < v.max and i > v.min:
             return self.compose(c, self.min)
 
         #Summary is only used when we want to change clusters
