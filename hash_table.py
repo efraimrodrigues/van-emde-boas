@@ -11,7 +11,7 @@ from pair import pair
 
 class hash_table:
 
-    def __init__(self, block_size = 8, e = 0.5, cleaning_threshold = 0.15, lookup = None):
+    def __init__(self, block_size = 8, e = 0.5, cleaning_threshold = 0.01, lookup = None):
         self.__q = 64 #Key size
         self.__block_size = block_size #Size of blocks the key will be split into
         self.__e = e #Doubling and halving constant parameter
