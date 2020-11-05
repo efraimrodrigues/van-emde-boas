@@ -123,7 +123,7 @@ prev = 0
 for i in range(n):
     number = random.randint(prev + 1, prev + 10)
 
-    print(str(number))
+    print("INC: " + str(number))
     table.add(number)
 
     if table.successor(prev) != number:
@@ -135,7 +135,7 @@ for i in range(n):
 
     #Let's test removing the predecessor
     if predecessor != None and random.randint(0, 1):
-        print("Deleted " + str(predecessor))
+        print("REM: " + str(predecessor))
         table.delete(predecessor)
         new_predecessor = table.predecessor(number)
         if new_predecessor != None and new_predecessor == predecessor:

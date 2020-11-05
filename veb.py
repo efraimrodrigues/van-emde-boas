@@ -75,8 +75,10 @@ class veb:
                 if minimum != x or minimum < self.min:
                     self.min = minimum
                     x = self.min
-                else:
+                elif self.max == self.min:
                     self.min = None
+                else:
+                    self.min = self.max
 
         if v != None:
             v.delete(i)
@@ -103,7 +105,7 @@ class veb:
             if self.summary.min == None:
                 self.max = self.min
                 self.summary = None
-            else:
+            elif x == self.max:
                 c = self.summary.max
                 v = self.clusters.search(c)
                 self.max = self.compose(c, v.max)
